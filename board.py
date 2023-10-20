@@ -1,5 +1,6 @@
 import random
 from turtle import Turtle, Screen
+import numpy as np
 
 
 class Board:
@@ -10,8 +11,10 @@ class Board:
         self.t.hideturtle()
         self.t.penup()
         self.init_pos = (0, 0)
-        self.void_pos = [3, 3]
         self.tiles = self.create_puzzle()
+        self.void_pos = none_index = np.where(self.tiles == None)
+        self.void_pos = [none_index[0][0], none_index[1][0]]
+        # self.void_pos = [3, 3]
         # self.start = self.create_puzzle()
 
     def draw_tiles(self):
@@ -69,7 +72,8 @@ class Board:
                 rv[row].append(ran)
                 self.nums.remove(ran)
         print('rv = ', rv)
-        self.check_solveable(rv)
+
+        rv = self.check_solveable(rv)
 
         return rv
 
@@ -83,25 +87,23 @@ class Board:
                 if listrv[i] is not None and listrv[j] is not None and listrv[i] > listrv[j]:
                     inversions += 1
         print('inversions', inversions)
+
         if inversions % 2 == 0:
-            print('yeahhh')
-
             for i in range(len(listrv)):
-                    if listrv[i] is not None and listrv[i+1] is not None and listrv[i] > listrv[i+1]:
-                        listrv[i], listrv[i+1] = listrv[i+1], listrv[i]
-                        break
-            print(listrv)
+                if listrv[i] is not None and listrv[i + 1] is not None and listrv[i] > listrv[i + 1]:
+                    listrv[i], listrv[i + 1] = listrv[i + 1], listrv[i]
+                    break
+            print(f'swap listrv = {listrv}')
+
         # back to [[],[],[],[]]
-        rv = [[],[],[],[]]
-        for row in range(len(rv)):
-            for col in range(4):
-                rv[row] =
+        solveablerv = np.reshape(listrv, (4, 4))
+        # for i in range(len(listrv)):
+        #     row = []
+        #     for j in range(4):
+        #         row.append(listrv[i * 4 + j])
+        #         solveablerv.append(row)
 
-        return
-
-
+        return solveablerv
 
     def check_correct_ans(self):
-        if self.finish == self.start:
-            print('hurayyyyyy!')
-            # score++
+        return np.all(self.finish == self.tiles)
